@@ -1,3 +1,4 @@
+@import url('https://fonts.googleapis.com/css2?family=Zen+Dots&display=swap');
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -6,7 +7,6 @@
 /* Add this to your global CSS or App.css */
 /* Add this to your global CSS or App.css */
 /* App.css or global CSS file */
-@import url('https://fonts.googleapis.com/css2?family=Zen+Dots&display=swap');
 
 * {
   box-sizing: border-box;

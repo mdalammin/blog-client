@@ -1,51 +1,125 @@
+import { useLayoutEffect, useRef } from "react";
+import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
 import StackCard from "./StackCard";
 
-export const CaseStudies = () => {
+gsap.registerPlugin(ScrollTrigger);
+
+const caseStudiesData = [
+    { title: "Technology", color: "#aec7ffff", id: 1 },
+    { title: "Finance", color: "#8db0fcff", id: 2 },
+    { title: "Service", color: "#234db1ff", id: 3 },
+    { title: "Home Decorate", color: "#8db0fcff", id: 4 },
+    { title: "E-commerce", color: "#aec7ffff", id: 5 },
+];
+
+export default function CaseStudies() {
+    const containerRef = useRef(null);
+    const cardRefs = useRef([]);
+
+    useLayoutEffect(() => {
+        const ctx = gsap.context(() => {
+            const cards = cardRefs.current;
+            const totalCards = cards.length;
+            const initialFocusIdx = 2; // Card 3 starts centered
+
+            // Initial State: Card 3 is focused
+            cards.forEach((card, i) => {
+                const relativeIdx = i - initialFocusIdx;
+                const isFocused = relativeIdx === 0;
+
+                gsap.set(card, {
+                    y: relativeIdx * 80,
+                    scale: 1 - Math.abs(relativeIdx) * 0.05,
+                    zIndex: 100 - Math.abs(relativeIdx),
+                });
+
+                // Aggressive internal visibility control
+                gsap.set(card.querySelector(".card-main-content"), { autoAlpha: isFocused ? 1 : 0 });
+                gsap.set(card.querySelector(".card-button"), { autoAlpha: isFocused ? 1 : 0 });
+                gsap.set(card.querySelector(".card-image"), { autoAlpha: isFocused ? 1 : 0.3 });
+
+                // Tabs: Category at top, Metrics at bottom
+                gsap.set(card.querySelector(".card-title"), { autoAlpha: relativeIdx <= 0 ? 1 : 0 });
+                gsap.set(card.querySelector(".card-metrics"), { autoAlpha: relativeIdx >= 0 ? 1 : 0 });
+            });
+
+            const timeline = gsap.timeline({
+                scrollTrigger: {
+                    trigger: containerRef.current,
+                    start: "top top",
+                    end: "+=120%", // More compact for faster scroll
+                    pin: true,
+                    scrub: true, // Instant feedback
+                    invalidateOnRefresh: true,
+                },
+            });
+
+            const remainingSteps = totalCards - initialFocusIdx - 1;
+
+            if (remainingSteps > 0) {
+                for (let i = 1; i <= remainingSteps; i++) {
+                    const currentFocusIdx = initialFocusIdx + i;
+                    const stepDuration = 1 / remainingSteps;
+
+                    timeline.to({}, { duration: stepDuration });
+
+                    cards.forEach((card, targetIdx) => {
+                        const relativeIdx = targetIdx - currentFocusIdx;
+                        const isFocused = relativeIdx === 0;
+
+                        timeline.to(card, {
+                            y: relativeIdx * 80,
+                            scale: 1 - Math.abs(relativeIdx) * 0.05,
+                            zIndex: 100 - Math.abs(relativeIdx),
+                            duration: stepDuration,
+                            ease: "power2.inOut",
+                        }, "<");
+
+                        // Toggle visibility mid-transition
+                        timeline.to(card.querySelector(".card-main-content"), {
+                            autoAlpha: isFocused ? 1 : 0,
+                            duration: stepDuration * 0.5,
+                        }, "<");
+                        timeline.to(card.querySelector(".card-button"), {
+                            autoAlpha: isFocused ? 1 : 0,
+                            duration: stepDuration * 0.5,
+                        }, "<");
+                        timeline.to(card.querySelector(".card-image"), {
+                            autoAlpha: isFocused ? 1 : 0.3,
+                            duration: stepDuration * 0.5,
+                        }, "<");
+
+                        timeline.to(card.querySelector(".card-title"), {
+                            autoAlpha: relativeIdx <= 0 ? 1 : 0,
+                            duration: stepDuration * 0.5,
+                        }, "<");
+                        timeline.to(card.querySelector(".card-metrics"), {
+                            autoAlpha: relativeIdx >= 0 ? 1 : 0,
+                            duration: stepDuration * 0.5,
+                        }, "<");
+                    });
+                }
+            }
+
+        }, containerRef);
+
+        return () => ctx.revert();
+    }, []);
+
     return (
-        <section className="max-w-7xl mx-auto py-24 px-4 my-[120px] bg-white">
-            {/* Header */}
-            {/* <div className="text-center space-y-6 mb-24">
-                <h2 className="text-5xl font-semibold">
-                    Featured Case Studies
-                </h2>
-                <p className="text-gray-500 text-xl">
-                    Discover how we’re driving change through innovative projects,
-                    strong <br /> partnerships, and measurable outcomes
-                </p>
-            </div> */}
-
-            {/* Stack Container */}
-            <div className="relative max-w-6xl mx-auto h-[720px]">
-                {/* Card 1 (Top back) */}
-                <StackCard
-                    title="Technology"
-                    className="bg-[#EEF3FF] translate-y-[-120px] scale-[0.92] z-10"
-                />
-
-                {/* Card 2 */}
-                <StackCard
-                    title="Finance"
-                    className="bg-[#DCE7FF] translate-y-[-60px] scale-[0.96] z-20"
-                />
-
-                {/* Card 3 (CENTER FOCUS) */}
-                <StackCard
-                    title="Technology"
-                    focused
-                    className="bg-[#7EA2F7] translate-y-[0px] scale-100 z-30"
-                />
-
-                {/* Card 4 */}
-                <StackCard
-                    title="Home Decorate"
-                    className="bg-[#DCE7FF] translate-y-[60px] scale-[0.96] z-20"
-                />
-
-                {/* Card 5 (Bottom back) */}
-                <StackCard
-                    title="Technology"
-                    className="bg-[#EEF3FF] translate-y-[120px] scale-[0.92] z-10"
-                />
+        <section ref={containerRef} className="relative h-screen bg-white">
+            <div className="h-screen flex items-center justify-center overflow-hidden px-4">
+                <div className="relative w-full max-w-7xl mx-auto h-[480px]">
+                    {caseStudiesData.map((study, index) => (
+                        <StackCard
+                            key={study.id}
+                            ref={(el) => (cardRefs.current[index] = el)}
+                            title={study.title}
+                            style={{ backgroundColor: study.color }}
+                        />
+                    ))}
+                </div>
             </div>
         </section>
     );
