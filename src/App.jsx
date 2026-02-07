@@ -5,6 +5,7 @@ import RevenueEngine from './components/RevenueEngine';
 import ServicesAccordion from './components/ServicesAccordion';
 import CaseStudies from './components/CaseStudies';
 import FooterUpdate from './components/FooterUpdate';
+import CaseStudies2 from './components/CaseStudies2';
 
 function App() {
   return (
@@ -16,6 +17,8 @@ function App() {
       {/* <ServicesAccordion /> */}
 
       <CaseStudies />
+
+      <CaseStudies2 />
 
       <FooterUpdate />
     </div>

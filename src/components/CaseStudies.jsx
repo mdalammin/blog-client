@@ -17,91 +17,123 @@ export default function CaseStudies() {
     const containerRef = useRef(null);
     const cardRefs = useRef([]);
 
+    const currentFocusRef = useRef(2);
+    const isAnimatingRef = useRef(false);
+    const isPinnedRef = useRef(false);
+
     useLayoutEffect(() => {
         const ctx = gsap.context(() => {
             const cards = cardRefs.current;
             const totalCards = cards.length;
-            const initialFocusIdx = 2; // Card 3 starts centered
 
-            // Initial State: Card 3 is focused
-            cards.forEach((card, i) => {
-                const relativeIdx = i - initialFocusIdx;
-                const isFocused = relativeIdx === 0;
+            /* -------------------------------
+               UPDATE CARDS (UNCHANGED DESIGN)
+            -------------------------------- */
+            const updateCards = (focusIdx) => {
+                cards.forEach((card, i) => {
+                    const relativeIdx = i - focusIdx;
+                    const isFocused = relativeIdx === 0;
 
-                gsap.set(card, {
-                    y: relativeIdx * 80,
-                    scale: 1 - Math.abs(relativeIdx) * 0.05,
-                    zIndex: 100 - Math.abs(relativeIdx),
-                });
-
-                // Aggressive internal visibility control
-                gsap.set(card.querySelector(".card-main-content"), { autoAlpha: isFocused ? 1 : 0 });
-                gsap.set(card.querySelector(".card-button"), { autoAlpha: isFocused ? 1 : 0 });
-                gsap.set(card.querySelector(".card-image"), { autoAlpha: isFocused ? 1 : 0.3 });
-
-                // Tabs: Category at top, Metrics at bottom
-                gsap.set(card.querySelector(".card-title"), { autoAlpha: relativeIdx <= 0 ? 1 : 0 });
-                gsap.set(card.querySelector(".card-metrics"), { autoAlpha: relativeIdx >= 0 ? 1 : 0 });
-            });
-
-            const timeline = gsap.timeline({
-                scrollTrigger: {
-                    trigger: containerRef.current,
-                    start: "top top",
-                    end: "+=120%", // More compact for faster scroll
-                    pin: true,
-                    scrub: true, // Instant feedback
-                    invalidateOnRefresh: true,
-                },
-            });
-
-            const remainingSteps = totalCards - initialFocusIdx - 1;
-
-            if (remainingSteps > 0) {
-                for (let i = 1; i <= remainingSteps; i++) {
-                    const currentFocusIdx = initialFocusIdx + i;
-                    const stepDuration = 1 / remainingSteps;
-
-                    timeline.to({}, { duration: stepDuration });
-
-                    cards.forEach((card, targetIdx) => {
-                        const relativeIdx = targetIdx - currentFocusIdx;
-                        const isFocused = relativeIdx === 0;
-
-                        timeline.to(card, {
-                            y: relativeIdx * 80,
-                            scale: 1 - Math.abs(relativeIdx) * 0.05,
-                            zIndex: 100 - Math.abs(relativeIdx),
-                            duration: stepDuration,
-                            ease: "power2.inOut",
-                        }, "<");
-
-                        // Toggle visibility mid-transition
-                        timeline.to(card.querySelector(".card-main-content"), {
-                            autoAlpha: isFocused ? 1 : 0,
-                            duration: stepDuration * 0.5,
-                        }, "<");
-                        timeline.to(card.querySelector(".card-button"), {
-                            autoAlpha: isFocused ? 1 : 0,
-                            duration: stepDuration * 0.5,
-                        }, "<");
-                        timeline.to(card.querySelector(".card-image"), {
-                            autoAlpha: isFocused ? 1 : 0.3,
-                            duration: stepDuration * 0.5,
-                        }, "<");
-
-                        timeline.to(card.querySelector(".card-title"), {
-                            autoAlpha: relativeIdx <= 0 ? 1 : 0,
-                            duration: stepDuration * 0.5,
-                        }, "<");
-                        timeline.to(card.querySelector(".card-metrics"), {
-                            autoAlpha: relativeIdx >= 0 ? 1 : 0,
-                            duration: stepDuration * 0.5,
-                        }, "<");
+                    gsap.to(card, {
+                        y: relativeIdx * 80,
+                        scale: 1 - Math.abs(relativeIdx) * 0.05,
+                        zIndex: 100 - Math.abs(relativeIdx),
+                        duration: 0.6,
+                        ease: "power3.out",
                     });
-                }
-            }
 
+                    gsap.to(card.querySelector(".card-main-content"), {
+                        autoAlpha: isFocused ? 1 : 0,
+                        duration: 0.3,
+                    });
+
+                    gsap.to(card.querySelector(".card-button"), {
+                        autoAlpha: isFocused ? 1 : 0,
+                        duration: 0.3,
+                    });
+
+                    gsap.to(card.querySelector(".card-image"), {
+                        autoAlpha: isFocused ? 1 : 0.3,
+                        duration: 0.3,
+                    });
+
+                    gsap.to(card.querySelector(".card-title"), {
+                        autoAlpha: relativeIdx <= 0 ? 1 : 0,
+                        duration: 0.3,
+                    });
+
+                    gsap.to(card.querySelector(".card-metrics"), {
+                        autoAlpha: relativeIdx >= 0 ? 1 : 0,
+                        duration: 0.3,
+                    });
+                });
+            };
+
+            /* -------------------------------
+               INITIAL STATE
+            -------------------------------- */
+            updateCards(currentFocusRef.current);
+
+            /* -------------------------------
+               STICKY PIN (REAL STICKY)
+            -------------------------------- */
+            ScrollTrigger.create({
+                trigger: containerRef.current,
+                start: "top top",
+                end: "+=80%",
+                pin: true,
+                pinSpacing: true,
+                invalidateOnRefresh: true,
+                onEnter: () => (isPinnedRef.current = true),
+                onEnterBack: () => (isPinnedRef.current = true),
+                onLeave: () => (isPinnedRef.current = false),
+                onLeaveBack: () => (isPinnedRef.current = false),
+            });
+
+            /* -------------------------------
+               WHEEL CONTROL (LOCK + RELEASE)
+            -------------------------------- */
+            const onWheel = (e) => {
+                if (!isPinnedRef.current) return;
+                if (isAnimatingRef.current) {
+                    e.preventDefault();
+                    return;
+                }
+
+                const direction = e.deltaY > 0 ? 1 : -1;
+                const current = currentFocusRef.current;
+                const next = current + direction;
+
+                // 🚪 RELEASE scroll at edges
+                if (
+                    (current === 0 && direction === -1) ||
+                    (current === totalCards - 1 && direction === 1)
+                ) {
+                    return;
+                }
+
+                e.preventDefault();
+
+                const clamped = Math.max(0, Math.min(next, totalCards - 1));
+                if (clamped === current) return;
+
+                isAnimatingRef.current = true;
+                currentFocusRef.current = clamped;
+
+                updateCards(clamped);
+
+                gsap.delayedCall(0.7, () => {
+                    isAnimatingRef.current = false;
+                });
+            };
+
+            containerRef.current.addEventListener("wheel", onWheel, {
+                passive: false, // 🔥 REQUIRED
+            });
+
+            return () => {
+                containerRef.current?.removeEventListener("wheel", onWheel);
+            };
         }, containerRef);
 
         return () => ctx.revert();
@@ -123,4 +155,4 @@ export default function CaseStudies() {
             </div>
         </section>
     );
-};
+}
