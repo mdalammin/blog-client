@@ -144,8 +144,8 @@ const FooterUpdate = () => {
                 </div>
 
                 {/* Background Overlay Text */}
-                <div className="absolute bottom-0 w-full flex justify-center pointer-events-none select-none overflow-hidden">
-                    <h1 className="text-[17vw] leading-[0.8] font-extrabold uppercase whitespace-nowrap bg-gradient-to-b from-white/20 to-transparent bg-clip-text text-transparent tracking-tight">
+                <div className="w-full flex justify-center pointer-events-none select-none overflow-hidden">
+                    <h1 className="text-[20vw] sm:text-[150px] md:text-[220px] lg:text-[280px] xl:text-[340px] leading-[0.8] font-extrabold uppercase whitespace-nowrap bg-gradient-to-b from-white/20 to-transparent bg-clip-text text-transparent ">
                         VISER X
                     </h1>
                 </div>
