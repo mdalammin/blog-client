@@ -8,6 +8,8 @@ import FooterUpdate from "./components/FooterUpdate";
 import CaseStudies2 from "./components/CaseStudies2";
 import PathAnimation from "./components/PathAnimation";
 import Navbar from "./components/Navbar";
+import VideoAnimation from "./components/VideoAnimation";
+import TextScrolling from "./components/TextScrolling";
 
 function App() {
   return (
@@ -16,7 +18,11 @@ function App() {
 
       <Hero />
 
+      <VideoAnimation />
+
       <RevenueEngine />
+
+      <TextScrolling />
 
       {/* <ServicesAccordion /> */}
 

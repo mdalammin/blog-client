@@ -46,15 +46,22 @@ export default function PathAnimation() {
   }, []);
 
   return (
-    <div className="bg-black">
-      <svg
-        width="1000"
-        height="400"
-        className="max-w-7xl mx-auto"
-        ref={stringRef}
-      >
-        <path ref={pathRef} d={initialPath} stroke="white" fill="transparent" />
-      </svg>
+    <div className="bg-teal-800">
+      <div className="">
+        <svg
+          width="1000"
+          height="400"
+          className="max-w-7xl mx-auto"
+          ref={stringRef}
+        >
+          <path
+            ref={pathRef}
+            d={initialPath}
+            stroke="white"
+            fill="transparent"
+          />
+        </svg>
+      </div>
     </div>
   );
 }
