@@ -16,17 +16,16 @@ export default function TextScrolling() {
         {
           x: "-67%",
           //   transform: "translateX(-350%)",
-          //   ease: "none",
           scrollTrigger: {
             trigger: parentRef.current,
-            // start: "top top",
-            start: "top 0%",
-            end: "top -150%",
-            // end: "+=1000",
+            start: "top top",
+            // start: "top 0%",
+            // end: "top -150%",
+            end: "+=2000",
             pin: true, // keeps section fixed while scaling
             // pin: true, // jodi pin true na dei tahole section sticky/fixed hobe na scroll er sathe sathe nicher dike ashte thakbe and oi section er animation hoite thakbe
-            scrub: 2,
-            markers: true, // remove in production
+            scrub: 1.5, //only animation when scrolling
+            // markers: true, // remove in production
           },
         },
       );

@@ -10,6 +10,7 @@ import PathAnimation from "./components/PathAnimation";
 import Navbar from "./components/Navbar";
 import VideoAnimation from "./components/VideoAnimation";
 import TextScrolling from "./components/TextScrolling";
+import ImageSliderScroll from "./components/ImageSliderScroll";
 
 function App() {
   return (
@@ -18,19 +19,21 @@ function App() {
 
       <Hero />
 
-      <VideoAnimation />
+      {/* <VideoAnimation /> */}
 
       <RevenueEngine />
 
-      <TextScrolling />
+      {/* <TextScrolling /> */}
 
       {/* <ServicesAccordion /> */}
 
-      {/* <CaseStudies /> */}
+      <CaseStudies />
 
       {/* <CaseStudies2 /> */}
 
-      <PathAnimation />
+      {/* <ImageSliderScroll /> */}
+
+      {/* <PathAnimation /> */}
 
       <FooterUpdate />
     </div>
