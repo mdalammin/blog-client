@@ -27,9 +27,11 @@ function App() {
 
       {/* <ServicesAccordion /> */}
 
-      <CaseStudies />
+      {/* <CaseStudies /> */}
 
-      {/* <CaseStudies2 /> */}
+      {/* <StackedCards /> */}
+
+      <CaseStudies2 />
 
       {/* <ImageSliderScroll /> */}
 

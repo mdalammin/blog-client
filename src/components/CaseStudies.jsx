@@ -139,9 +139,12 @@ export default function CaseStudies() {
   }, []);
 
   return (
-    <section ref={containerRef} className="relative h-screen bg-white">
+    <section ref={containerRef} className="relative bg-white">
       <div className="h-screen flex items-center justify-center overflow-hidden px-4 py-16">
-        <div className="relative w-full max-w-7xl mx-auto h-full md:h-[480px]">
+        <div
+          className="relative w-full max-w-7xl mx-auto h-full md:h-[480px]"
+          id="card-stack"
+        >
           {caseStudiesData.map((study, index) => (
             <StackCard
               key={study.id}
