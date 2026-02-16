@@ -11,33 +11,39 @@ import Navbar from "./components/Navbar";
 import VideoAnimation from "./components/VideoAnimation";
 import TextScrolling from "./components/TextScrolling";
 import ImageSliderScroll from "./components/ImageSliderScroll";
+import CodingStyleEvaluation from "./components/CodingStyleEvaluation";
+import CardAnimation from "./components/CardAnimation";
 
 function App() {
   return (
     <div className="min-h-screen">
-      <Navbar />
+      {/* <Navbar /> */}
 
-      <Hero />
+      {/* <Hero /> */}
+
+      <CardAnimation />
 
       {/* <VideoAnimation /> */}
 
-      <RevenueEngine />
+      {/* <RevenueEngine /> */}
 
       {/* <TextScrolling /> */}
 
       {/* <ServicesAccordion /> */}
 
+      {/* <CodingStyleEvaluation /> */}
+
       {/* <CaseStudies /> */}
 
       {/* <StackedCards /> */}
 
-      <CaseStudies2 />
+      {/* <CaseStudies2 /> */}
 
       {/* <ImageSliderScroll /> */}
 
       {/* <PathAnimation /> */}
 
-      <FooterUpdate />
+      {/* <FooterUpdate /> */}
     </div>
   );
 }
