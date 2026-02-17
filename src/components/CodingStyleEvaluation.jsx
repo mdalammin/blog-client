@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useLayoutEffect } from "react";
 import {
   ChevronDown,
   Check,
@@ -8,8 +8,13 @@ import {
   Zap,
 } from "lucide-react";
 
+import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+
+gsap.registerPlugin(ScrollTrigger);
+
 const CodingStyleEvaluation = () => {
-  const [activeCard, setActiveCard] = useState(2); // Start with 3rd card (index 2) in center
+  const [activeCard, setActiveCard] = useState(0); // Start with 3rd card (index 2) in center
   const scrollContainerRef = useRef(null);
   const isScrollingRef = useRef(false);
 
@@ -23,7 +28,7 @@ const CodingStyleEvaluation = () => {
       metric2: { value: "Good", label: "Organization" },
       details:
         "Your requirements are clear and well-structured. You specify tech stack upfront (React, Tailwind CSS).",
-      color: "from-blue-400 to-blue-600",
+      color: "#0C7779",
     },
     {
       category: "Finance",
@@ -33,7 +38,7 @@ const CodingStyleEvaluation = () => {
       metric2: { value: "Excellent", label: "Detail Level" },
       details:
         "Great detail: dimensions (width: full, height: 600px), responsive requirements, animation behavior all specified.",
-      color: "from-purple-400 to-purple-600",
+      color: "#005461",
     },
     {
       category: "Home Decorate",
@@ -43,7 +48,7 @@ const CodingStyleEvaluation = () => {
       metric2: { value: "Strong", label: "Interaction Focus" },
       details:
         "Excellent attention to scroll behavior, smooth transitions, responsive design. You're thinking about the end user.",
-      color: "from-green-400 to-green-600",
+      color: "#215E61",
     },
     {
       category: "Technology",
@@ -53,7 +58,7 @@ const CodingStyleEvaluation = () => {
       metric2: { value: "Improving", label: "Documentation" },
       details:
         "Room to improve: 'initially 5 cards visible one is in the center' could be clearer. Consider bullet points for complex specs.",
-      color: "from-orange-400 to-orange-600",
+      color: "#088395",
     },
     {
       category: "Development",
@@ -63,7 +68,7 @@ const CodingStyleEvaluation = () => {
       metric2: { value: "Flexible", label: "Approach" },
       details:
         "You're open to using libraries ('any react library for better transition') which shows pragmatism over reinventing wheels.",
-      color: "from-pink-400 to-pink-600",
+      color: "#09637E",
     },
   ];
 
@@ -192,36 +197,38 @@ const CodingStyleEvaluation = () => {
   }, [activeCard, cards.length]);
 
   // Handle keyboard navigation
-  useEffect(() => {
-    const handleKeyDown = (e) => {
-      if (isScrollingRef.current) return;
+  // useEffect(() => {
+  //   const handleKeyDown = (e) => {
+  //     if (isScrollingRef.current) return;
 
-      if (e.key === "ArrowDown") {
-        isScrollingRef.current = true;
-        if (activeCard < cards.length - 1) {
-          setActiveCard((prev) => prev + 1);
-        } else {
-          setActiveCard(0); // Wrap to first card
-        }
-        setTimeout(() => {
-          isScrollingRef.current = false;
-        }, 800);
-      } else if (e.key === "ArrowUp") {
-        isScrollingRef.current = true;
-        if (activeCard > 0) {
-          setActiveCard((prev) => prev - 1);
-        } else {
-          setActiveCard(cards.length - 1); // Wrap to last card
-        }
-        setTimeout(() => {
-          isScrollingRef.current = false;
-        }, 800);
-      }
-    };
+  //     if (e.key === "ArrowDown") {
+  //       isScrollingRef.current = true;
+  //       if (activeCard < cards.length - 1) {
+  //         setActiveCard((prev) => prev + 1);
+  //       } else {
+  //         setActiveCard(0); // Wrap to first card
+  //       }
+  //       setTimeout(() => {
+  //         isScrollingRef.current = false;
+  //       }, 800);
+  //     } else if (e.key === "ArrowUp") {
+  //       isScrollingRef.current = true;
+  //       if (activeCard > 0) {
+  //         setActiveCard((prev) => prev - 1);
+  //       } else {
+  //         setActiveCard(cards.length - 1); // Wrap to last card
+  //       }
+  //       setTimeout(() => {
+  //         isScrollingRef.current = false;
+  //       }, 800);
+  //     }
+  //   };
 
-    window.addEventListener("keydown", handleKeyDown);
-    return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [activeCard, cards.length]);
+  //   window.addEventListener("keydown", handleKeyDown);
+  //   return () => window.removeEventListener("keydown", handleKeyDown);
+  // }, [activeCard, cards.length]);
+
+  // card gap style --
 
   const getCardStyle = (index) => {
     // Calculate position relative to active card
@@ -234,11 +241,11 @@ const CodingStyleEvaluation = () => {
 
     // Center card (diff = 0) is fully visible and scaled to 1
     // Cards above and below are stacked with decreasing scale and opacity
-    const scale = diff === 0 ? 1 : 0.85 - Math.abs(diff) * 0.08;
-    const opacity = diff === 0 ? 1 : 0.4;
+    const scale = diff === 0 ? 1 : 1.05 - Math.abs(diff) * 0.15;
+    const opacity = diff === 0 ? 1 : 0.8;
 
     // Vertical positioning: spread cards above and below center
-    const translateY = diff * 120; // 120px spacing between cards
+    const translateY = diff * 90; // 120px spacing between cards
 
     // Z-index: center card on top, then cards closer to center
     const zIndex = 50 - Math.abs(diff);
@@ -247,64 +254,32 @@ const CodingStyleEvaluation = () => {
       transform: `translateY(${translateY}px) scale(${scale})`,
       opacity: opacity,
       zIndex: zIndex,
-      transition: "all 0.8s cubic-bezier(0.4, 0, 0.2, 1)",
+      // transition: "all 0.8s cubic-bezier(0.4, 0, 0.2, 1)",
+      transition: "transform 1.2s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.9s",
       pointerEvents: diff === 0 ? "auto" : "none", // Only center card is interactive
     };
   };
 
   return (
     <div
-      ref={scrollContainerRef}
+      // ref={scrollContainerRef}
       className="h-screen overflow-hidden bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900"
     >
       {/* Header */}
-      {/* <div className="fixed top-0 left-0 right-0 z-50 bg-slate-900/80 backdrop-blur-sm border-b border-slate-700">
-        <div className="max-w-7xl mx-auto px-4 py-4">
-          <div className="flex items-center justify-between">
-            <div>
-              <h1 className="text-2xl font-bold text-white flex items-center gap-2">
-                <Code className="w-6 h-6" />
-                Your Coding Style Evaluation
-              </h1>
-              <p className="text-slate-400 text-sm mt-1">
-                Scroll to explore • Card {activeCard + 1} of {cards.length}
-              </p>
-            </div>
-            <div className="text-right">
-              <div className="text-3xl font-bold text-white">85%</div>
-              <div className="text-slate-400 text-sm">Overall Score</div>
-            </div>
-          </div>
-        </div>
-      </div> */}
-
-      {/* Scroll Indicator */}
-      <div className="fixed top-24 right-8 z-50 hidden lg:block">
-        <div className="flex flex-col gap-2">
-          {cards.map((_, index) => (
-            <button
-              key={index}
-              onClick={() => {
-                if (!isScrollingRef.current) {
-                  isScrollingRef.current = true;
-                  setActiveCard(index);
-                  setTimeout(() => {
-                    isScrollingRef.current = false;
-                  }, 800);
-                }
-              }}
-              className={`w-2 h-2 rounded-full transition-all duration-300 hover:scale-125 cursor-pointer ${
-                index === activeCard ? "bg-blue-500 scale-150" : "bg-slate-600"
-              }`}
-            />
-          ))}
-        </div>
+      <div className="text-center mb-4">
+        <h2 className="text-5xl font-bold">Our Case Studies</h2>
+        <p className="text-gray-600 mt-4">
+          Explore our latest creative works and innovations.
+        </p>
       </div>
 
       {/* Fixed Container for Cards */}
-      <div className="fixed inset-0 flex items-center justify-center pt-24 pb-8">
+      <div
+        ref={scrollContainerRef}
+        className="fixed inset-0 flex items-center justify-center pt-24 pb-8"
+      >
         <div
-          className="relative w-full max-w-4xl mx-auto px-4"
+          className="relative w-full max-w-7xl mx-auto px-4"
           style={{ height: "600px" }}
         >
           {cards.map((card, index) => (
@@ -315,6 +290,7 @@ const CodingStyleEvaluation = () => {
             >
               <div
                 className={`w-full h-[600px] bg-gradient-to-br ${card.color} rounded-3xl shadow-2xl overflow-hidden`}
+                style={{ backgroundColor: `${card.color}` }}
               >
                 <div className="h-full flex flex-col lg:flex-row">
                   {/* Left Side - Content */}

@@ -13,6 +13,8 @@ import TextScrolling from "./components/TextScrolling";
 import ImageSliderScroll from "./components/ImageSliderScroll";
 import CodingStyleEvaluation from "./components/CodingStyleEvaluation";
 import CardAnimation from "./components/CardAnimation";
+import NewCaseStudies from "./components/NewCaseStudies";
+import PinnedSection from "./components/PinnedSection";
 
 function App() {
   return (
@@ -21,7 +23,7 @@ function App() {
 
       {/* <Hero /> */}
 
-      <CardAnimation />
+      {/* <CardAnimation /> */}
 
       {/* <VideoAnimation /> */}
 
@@ -32,6 +34,10 @@ function App() {
       {/* <ServicesAccordion /> */}
 
       {/* <CodingStyleEvaluation /> */}
+
+      <PinnedSection />
+
+      {/* <NewCaseStudies /> */}
 
       {/* <CaseStudies /> */}
 
