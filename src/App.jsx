@@ -5,16 +5,15 @@ import RevenueEngine from "./components/RevenueEngine";
 import ServicesAccordion from "./components/ServicesAccordion";
 import CaseStudies from "./components/CaseStudies";
 import FooterUpdate from "./components/FooterUpdate";
-import CaseStudies2 from "./components/CaseStudies2";
 import PathAnimation from "./components/PathAnimation";
 import Navbar from "./components/Navbar";
 import VideoAnimation from "./components/VideoAnimation";
 import TextScrolling from "./components/TextScrolling";
 import ImageSliderScroll from "./components/ImageSliderScroll";
-import CodingStyleEvaluation from "./components/CodingStyleEvaluation";
+import CodingStyleEvaluation from "./components/CoadingStyleEvalution/CodingStyleEvaluation";
 import CardAnimation from "./components/CardAnimation";
-import NewCaseStudies from "./components/NewCaseStudies";
-import PinnedSection from "./components/PinnedSection";
+import PinnedSection from "./components/PinnedSection/PinnedSection";
+import ScrollAnimation from "./components/ScrollAnimation/ScrollAnimation";
 
 function App() {
   return (
@@ -35,15 +34,11 @@ function App() {
 
       {/* <CodingStyleEvaluation /> */}
 
+      {/* <ScrollAnimation /> */}
+
       <PinnedSection />
 
-      {/* <NewCaseStudies /> */}
-
       {/* <CaseStudies /> */}
-
-      {/* <StackedCards /> */}
-
-      {/* <CaseStudies2 /> */}
 
       {/* <ImageSliderScroll /> */}
 

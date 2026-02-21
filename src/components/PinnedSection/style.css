@@ -1,0 +1,42 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+section {
+    position: relative;
+    width: 100%;
+    height: 100svh;
+    overflow: hidden;
+}
+
+.intro,
+.outro {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.sticky-cards .card {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 65%;
+    height: 60%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 1rem;
+    padding: 2.5rem;
+    border-radius: 1rem;
+    color: #fff;
+    transform-origin: center center;
+    will-change: transform;
+}

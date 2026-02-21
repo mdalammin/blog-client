@@ -1,7 +1,11 @@
 import React, { useEffect, useRef, useState } from "react";
 import { Check, AlertCircle, Lightbulb, Code, Zap } from "lucide-react";
+
+import "./style.css";
+
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+import Lenis from "lenis";
 
 const PinnedSection = () => {
   const sectionRef = useRef(null);
@@ -65,12 +69,29 @@ const PinnedSection = () => {
     gsap.registerPlugin(ScrollTrigger);
 
     const ctx = gsap.context(() => {
+
+      const lenis = new Lenis();
+      lenis.on("scroll", ScrollTrigger.update);
+
+      const tickerCallback = (time) => {
+        lenis.raf(time * 1000);
+      };
+
+      gsap.ticker.add(tickerCallback);
+      gsap.ticker.lagSmoothing(0);
+
       ScrollTrigger.create({
         trigger: sectionRef.current,
         start: "top top",
         end: `+=${cards.length * 100}%`,
         pin: true,
-        scrub: 2,
+        scrub: 1,
+        snap: {
+          snapTo: 1 / (cards.length - 1),
+          delay: 0.1,
+          duration: 0.4,
+          ease: "power2.inOut",
+        },
         markers: true,
         // ease: "power1.out",
         onUpdate: (self) => {
@@ -95,7 +116,7 @@ const PinnedSection = () => {
     const scale = diff === 0 ? 1 : 1 - Math.abs(diff) * 0.15;
 
     const opacity = diff === 0 ? 1 : 1;
-    const translateY = isMobile ? diff * 60 : diff * 90;
+    const translateY = isMobile ? diff * 60 : diff * 70;
     const zIndex = 50 - Math.abs(diff);
 
     return {
@@ -112,18 +133,19 @@ const PinnedSection = () => {
 
   return (
     <>
-      <section style={{ height: "100vh", background: "#fff" }}>
+      <section style={{ height: "100vh", background: "#fff" }} className="intro">
         Scroll Down
       </section>
 
       <section
         ref={sectionRef}
-        style={{ height: "100vh", background: "#f4a261" }}
+        className="sticky-cards"
+        style={{ minHeight: "100vh" }}
       >
         <div className="flex flex-col items-center justify-center h-full px-4">
           <div
             className="relative w-full max-w-7xl mx-auto px-4"
-            style={{ height: "600px" }}
+            style={{ height: "100vh" }}
           >
             {cards.map((card, index) => (
               <div
@@ -132,7 +154,7 @@ const PinnedSection = () => {
                 style={getCardStyle(index)}
               >
                 <div
-                  className="w-full h-[600px] rounded-3xl shadow-2xl overflow-hidden"
+                  className="w-full h-[500px] rounded-3xl shadow-2xl overflow-hidden"
                   style={{ backgroundColor: card.color }}
                 >
                   <div className="h-full flex flex-col lg:flex-row px-[32px] py-[24px]">
@@ -186,7 +208,7 @@ const PinnedSection = () => {
         </div>
       </section>
 
-      <section style={{ height: "100vh", background: "#2a9d8f" }}>
+      <section style={{ height: "100vh", background: "#2a9d8f" }} className="outro">
         Next Section
       </section>
     </>
