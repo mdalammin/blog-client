@@ -28,15 +28,15 @@ function App() {
 
       {/* <RevenueEngine /> */}
 
-      {/* <TextScrolling /> */}
+      <TextScrolling />
 
-      {/* <ServicesAccordion /> */}
+      <ServicesAccordion />
 
       {/* <CodingStyleEvaluation /> */}
 
       {/* <ScrollAnimation /> */}
 
-      <PinnedSection />
+      {/* <PinnedSection /> */}
 
       {/* <CaseStudies /> */}
 
@@ -44,7 +44,7 @@ function App() {
 
       {/* <PathAnimation /> */}
 
-      {/* <FooterUpdate /> */}
+      <FooterUpdate />
     </div>
   );
 }
