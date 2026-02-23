@@ -24,7 +24,7 @@ function App() {
 
       {/* <CardAnimation /> */}
 
-      <VideoAnimation />
+      {/* <VideoAnimation /> */}
 
       {/* <RevenueEngine /> */}
 
@@ -34,7 +34,7 @@ function App() {
 
       {/* <CodingStyleEvaluation /> */}
 
-      {/* <ScrollAnimation /> */}
+      <ScrollAnimation />
 
       {/* <PinnedSection /> */}
 

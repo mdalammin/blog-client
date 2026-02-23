@@ -9,10 +9,16 @@ gsap.registerPlugin(ScrollTrigger);
 
 export default function ScrollAnimation() {
   const container = useRef(null);
+  const isMobile = window.innerWidth < 768;
 
   useLayoutEffect(() => {
     const ctx = gsap.context(() => {
-      const lenis = new Lenis();
+      // const lenis = new Lenis();
+      const lenis = new Lenis({
+        lerp: isMobile ? 0.05 : 0.08, // mobile slower
+        wheelMultiplier: isMobile ? 0.7 : 1, // scroll slow
+        touchMultiplier: isMobile ? 0.6 : 1, // touch slow
+      });
       lenis.on("scroll", ScrollTrigger.update);
 
       const tickerCallback = (time) => {
@@ -27,8 +33,39 @@ export default function ScrollAnimation() {
 
       if (totalCards === 0) return;
 
-      const cardYOffset = 12;
-      const cardScaleStep = 0.09;
+      // const cardYOffset = 12;
+      // const cardScaleStep = 0.09;
+
+      // for React
+      // ✅ Responsive values
+      let cardYOffset;
+      let cardScaleStep;
+
+      const width = window.innerWidth;
+
+      if (width < 480) {
+        // 📱 Mobile
+        cardYOffset = 8;
+        cardScaleStep = 0.06;
+      } else if (width < 768) {
+        // 📱 Tablet
+        cardYOffset = 10;
+        cardScaleStep = 0.07;
+      } else if (width < 1024) {
+        // 💻 Small laptop
+        cardYOffset = 11;
+        cardScaleStep = 0.08;
+      } else {
+        // 🖥️ Desktop
+        cardYOffset = 12;
+        cardScaleStep = 0.09;
+      }
+
+      // For Next
+      // ✅ responsive
+      // const width = window.innerWidth;
+      // const cardYOffset = gsap.utils.clamp(8, width * 0.008, 14);
+      // const cardScaleStep = gsap.utils.clamp(0.05, width * 0.00008, 0.1);
 
       // Define the 5 fixed vertical positions (Slots)
       const slots = [
@@ -52,30 +89,15 @@ export default function ScrollAnimation() {
       ScrollTrigger.create({
         trigger: ".sticky-cards",
         start: "top top",
-        end: `+=${window.innerHeight * 3}px`,
+        // end: `+=${window.innerHeight * 3}px`,
+        end: `+=${window.innerHeight * (isMobile ? 6 : 3)}`,
         pin: true,
         pinSpacing: true,
-        // scrub: 0.6,
-        // scrub: false,
-        // snap: {
-        //   snapTo: 1 / (totalCards - 1),
-        //   delay: 0.1,
-        //   duration: 0.6,
-        //   ease: "power2.inOut",
-        // },
-
-        // snap: {
-        //   snapTo: 1 / (totalCards - 1),
-        //   duration: { min: 0.2, max: 0.5 },
-        //   ease: "power3.out",
-        //   inertia: false,
-        // },
-
-        scrub: 0.3,
+        scrub: isMobile ? 0.15 : 0.3,
         snap: {
           snapTo: (value) =>
             Math.round(value * (totalCards - 1)) / (totalCards - 1),
-          duration: 0.25,
+          duration: isMobile ? 0.4 : 0.25,
           ease: "power3.out",
         },
 
@@ -88,7 +110,8 @@ export default function ScrollAnimation() {
               (i - totalShift + totalCards * 10) % totalCards;
 
             const slotA = Math.floor(currentProgressIndex);
-            const slotB = (slotA + 1) % totalCards;
+            // const slotB = (slotA + 1) % totalCards;
+            const slotB = (slotA + 1) % slots.length;
             const segmentProgress = currentProgressIndex - slotA;
 
             const targetY = gsap.utils.interpolate(
@@ -128,53 +151,159 @@ export default function ScrollAnimation() {
       </section>
 
       <section className="sticky-cards">
-        <div className="card" id="card-1">
+        <div className="card bg-[#739bf2]" id="card-1">
           <div className="col">
-            <p>Quite Control</p>
-            <h1>Signal Drift</h1>
+            <h1 className="font-semibold">Technology</h1>
+            <p className="text-[34px]">
+              Apple Gadgets Doubles Traffic with Strategic SEO in 3 Months
+            </p>
+
+            <div className="flex justify gap-12">
+              <div>
+                <h2 className="text-[45px]">45%</h2>
+                <p className="text-[20px]">Good</p>
+              </div>
+              <div>
+                <h2 className="text-[45px]">45%</h2>
+                <p className="text-[20px]">Good</p>
+              </div>
+            </div>
+
+            <div>
+              <button className="px-4 py-3 cursor-pointer rounded-full bg-black text-white">
+                View Details
+              </button>
+            </div>
+
+            <h1>Current Impression</h1>
           </div>
+
           <div className="col">
-            <img src="/image1.png" alt="" />
+            <img src="/img1.png" alt="" />
           </div>
         </div>
 
-        <div className="card" id="card-2">
+        <div className="card bg-[#a2bcf6]" id="card-2">
           <div className="col">
-            <p>Quite Control</p>
-            <h1>Signal Drift</h1>
+            <h1 className="font-semibold">Technology</h1>
+            <p className="text-[34px]">
+              Apple Gadgets Doubles Traffic with Strategic SEO in 3 Months
+            </p>
+
+            <div className="flex justify gap-12">
+              <div>
+                <h2 className="text-[45px]">45%</h2>
+                <p className="text-[20px]">Good</p>
+              </div>
+              <div>
+                <h2 className="text-[45px]">45%</h2>
+                <p className="text-[20px]">Good</p>
+              </div>
+            </div>
+
+            <div>
+              <button className="px-4 py-3 cursor-pointer rounded-full bg-black text-white">
+                View Details
+              </button>
+            </div>
+
+            <h1>Current Impression</h1>
           </div>
-          <div className="col">
-            <img src="/image2.png" alt="" />
+          <div className="col py-[30px]">
+            <img src="/img1.png" alt="" />
           </div>
         </div>
 
-        <div className="card" id="card-3">
+        <div className="card bg-[#d0defb]" id="card-3">
           <div className="col">
-            <p>Original Master</p>
-            <h1>Skyline Way</h1>
+            <h1 className="font-semibold">Technology</h1>
+            <p className="text-[34px]">
+              Apple Gadgets Doubles Traffic with Strategic SEO in 3 Months
+            </p>
+
+            <div className="flex justify gap-12">
+              <div>
+                <h2 className="text-[45px]">45%</h2>
+                <p className="text-[20px]">Good</p>
+              </div>
+              <div>
+                <h2 className="text-[45px]">45%</h2>
+                <p className="text-[20px]">Good</p>
+              </div>
+            </div>
+
+            <div>
+              <button className="px-4 py-3 cursor-pointer rounded-full bg-black text-white">
+                View Details
+              </button>
+            </div>
+
+            <h1>Current Impression</h1>
           </div>
           <div className="col">
-            <img src="/image3.png" alt="" />
+            <img src="/img1.png" alt="" />
           </div>
         </div>
 
-        <div className="card" id="card-4">
+        <div className="card bg-[#a2bcf6]" id="card-4">
           <div className="col">
-            <p>Wired Thought</p>
-            <h1>Neural Assembly</h1>
+            <h1 className="font-semibold">Technology</h1>
+            <p className="text-[34px]">
+              Apple Gadgets Doubles Traffic with Strategic SEO in 3 Months
+            </p>
+
+            <div className="flex justify gap-12">
+              <div>
+                <h2 className="text-[45px]">45%</h2>
+                <p className="text-[20px]">Good</p>
+              </div>
+              <div>
+                <h2 className="text-[45px]">45%</h2>
+                <p className="text-[20px]">Good</p>
+              </div>
+            </div>
+
+            <div>
+              <button className="px-4 py-3 cursor-pointer rounded-full bg-black text-white">
+                View Details
+              </button>
+            </div>
+
+            <h1>Current Impression</h1>
           </div>
           <div className="col">
-            <img src="/image4.png" alt="" />
+            <img src="/img1.png" alt="" />
           </div>
         </div>
 
-        <div className="card" id="card-5">
+        <div className="card bg-[#d0defb]" id="card-5">
           <div className="col">
-            <p>Wired Thought</p>
-            <h1>Neural Assembly</h1>
+            <h1 className="font-semibold">Technology</h1>
+            <p className="text-[34px]">
+              Apple Gadgets Doubles Traffic with Strategic SEO in 3 Months
+            </p>
+
+            <div className="flex justify gap-12">
+              <div>
+                <h2 className="text-[45px]">45%</h2>
+                <p className="text-[20px]">Good</p>
+              </div>
+              <div>
+                <h2 className="text-[45px]">45%</h2>
+                <p className="text-[20px]">Good</p>
+              </div>
+            </div>
+
+            <div>
+              <button className="px-4 py-3 cursor-pointer rounded-full bg-black text-white">
+                View Details
+              </button>
+            </div>
+
+            <h1>Current Impression</h1>
           </div>
           <div className="col">
-            <img src="/image4.png" alt="" />
+            <img src="/img1.png" alt="" />
           </div>
         </div>
       </section>
