@@ -20,17 +20,17 @@ function App() {
     <div className="min-h-screen">
       {/* <Navbar /> */}
 
-      {/* <Hero /> */}
+      <Hero />
 
       {/* <CardAnimation /> */}
 
-      {/* <VideoAnimation /> */}
+      <VideoAnimation />
 
       {/* <RevenueEngine /> */}
 
-      <TextScrolling />
+      {/* <TextScrolling /> */}
 
-      <ServicesAccordion />
+      {/* <ServicesAccordion /> */}
 
       {/* <CodingStyleEvaluation /> */}
 
