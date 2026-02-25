@@ -11,30 +11,13 @@ export default function ScrollAnimation() {
   const container = useRef(null);
   const isMobile = window.innerWidth < 768;
 
+  // Lenis removed because it frequently conflicts with GSAP pinning and snaps
   useLayoutEffect(() => {
     const ctx = gsap.context(() => {
-      // const lenis = new Lenis();
-      const lenis = new Lenis({
-        lerp: isMobile ? 0.05 : 0.08, // mobile slower
-        wheelMultiplier: isMobile ? 0.7 : 1, // scroll slow
-        touchMultiplier: isMobile ? 0.6 : 1, // touch slow
-      });
-      lenis.on("scroll", ScrollTrigger.update);
-
-      const tickerCallback = (time) => {
-        lenis.raf(time * 1000);
-      };
-
-      gsap.ticker.add(tickerCallback);
-      gsap.ticker.lagSmoothing(0);
-
       const cards = gsap.utils.toArray(".card");
       const totalCards = cards.length;
 
       if (totalCards === 0) return;
-
-      // const cardYOffset = 12;
-      // const cardScaleStep = 0.09;
 
       // for React
       // ✅ Responsive values
@@ -61,12 +44,6 @@ export default function ScrollAnimation() {
         cardScaleStep = 0.09;
       }
 
-      // For Next
-      // ✅ responsive
-      // const width = window.innerWidth;
-      // const cardYOffset = gsap.utils.clamp(8, width * 0.008, 14);
-      // const cardScaleStep = gsap.utils.clamp(0.05, width * 0.00008, 0.1);
-
       // Define the 5 fixed vertical positions (Slots)
       const slots = [
         { y: -50 - 2 * cardYOffset, s: 1 - 2 * cardScaleStep }, // Slot 0
@@ -89,16 +66,15 @@ export default function ScrollAnimation() {
       ScrollTrigger.create({
         trigger: ".sticky-cards",
         start: "top top",
-        // end: `+=${window.innerHeight * 3}px`,
-        end: `+=${window.innerHeight * (isMobile ? 6 : 3)}`,
+        end: `+=${window.innerHeight * (isMobile ? 2.5 : 1.5)}`, // Kept short
         pin: true,
         pinSpacing: true,
-        scrub: isMobile ? 0.15 : 0.3,
+        scrub: 1, // Smooth scrub so it glides with scroll wheel perfectly
         snap: {
-          snapTo: (value) =>
-            Math.round(value * (totalCards - 1)) / (totalCards - 1),
-          duration: isMobile ? 0.4 : 0.25,
-          ease: "power3.out",
+          snapTo: 1 / (totalCards - 1),
+          duration: { min: 0.1, max: 0.3 }, // Soft snap
+          delay: 0.1, // Wait just a moment after scroll stops
+          ease: "power1.inOut",
         },
 
         onUpdate: (self) => {
@@ -135,10 +111,6 @@ export default function ScrollAnimation() {
         },
       });
 
-      return () => {
-        lenis.destroy();
-        gsap.ticker.remove(tickerCallback);
-      };
     }, container);
 
     return () => ctx.revert();
