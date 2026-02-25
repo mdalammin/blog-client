@@ -55,59 +55,53 @@ export default function ScrollAnimation() {
 
       // Initial setup
       cards.forEach((card, i) => {
+        // Card 0 starts at center (slot 2)
+        const slotIndex = (i + 2) % slots.length;
+
+        // Force very first initial frame instantly
         gsap.set(card, {
           xPercent: -50,
-          yPercent: slots[i % slots.length].y,
-          scale: slots[i % slots.length].s,
+          yPercent: slots[slotIndex].y,
+          scale: slots[slotIndex].s,
           autoAlpha: 1,
+          zIndex: Math.round(slots[slotIndex].s * 200) + (totalCards - i),
         });
       });
+
+      let activeIndex = -1; // init marker
 
       ScrollTrigger.create({
         trigger: ".sticky-cards",
         start: "top top",
-        end: `+=${window.innerHeight * (isMobile ? 2.5 : 1.5)}`, // Kept short
+        end: `+=${window.innerHeight * (totalCards - 1) * 0.5}`,
         pin: true,
         pinSpacing: true,
-        scrub: 1, // Smooth scrub so it glides with scroll wheel perfectly
-        snap: {
-          snapTo: 1 / (totalCards - 1),
-          duration: { min: 0.1, max: 0.3 }, // Soft snap
-          delay: 0.1, // Wait just a moment after scroll stops
-          ease: "power1.inOut",
-        },
+        scrub: false, // Turn off scrub! We only want discrete changes
+        anticipatePin: 1,
+        invalidateOnRefresh: true,
 
         onUpdate: (self) => {
-          const progress = self.progress;
-          const totalShift = progress * (totalCards - 1);
+          // Calculate integer index based on scroll progress
+          const newIndex = Math.round(self.progress * (totalCards - 1));
 
-          cards.forEach((card, i) => {
-            const currentProgressIndex =
-              (i - totalShift + totalCards * 10) % totalCards;
+          if (newIndex !== activeIndex) {
+            activeIndex = newIndex;
 
-            const slotA = Math.floor(currentProgressIndex);
-            // const slotB = (slotA + 1) % totalCards;
-            const slotB = (slotA + 1) % slots.length;
-            const segmentProgress = currentProgressIndex - slotA;
+            cards.forEach((card, i) => {
+              // Map to the requested slot logic
+              const slotIndex = (i - activeIndex + 2 + totalCards * 10) % slots.length;
 
-            const targetY = gsap.utils.interpolate(
-              slots[slotA % slots.length].y,
-              slots[slotB % slots.length].y,
-              segmentProgress,
-            );
-            const targetS = gsap.utils.interpolate(
-              slots[slotA % slots.length].s,
-              slots[slotB % slots.length].s,
-              segmentProgress,
-            );
-
-            gsap.set(card, {
-              yPercent: targetY,
-              scale: targetS,
-              autoAlpha: 1,
-              zIndex: Math.round(targetS * 200) + (totalCards - i),
+              gsap.to(card, {
+                yPercent: slots[slotIndex].y,
+                scale: slots[slotIndex].s,
+                autoAlpha: 1,
+                duration: 0.8, // Smooth transition duration when changing
+                ease: "power3.out", // Decelerating ease
+                zIndex: Math.round(slots[slotIndex].s * 200) + (totalCards - i),
+                overwrite: "auto",
+              });
             });
-          });
+          }
         },
       });
 
