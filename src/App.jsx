@@ -14,6 +14,7 @@ import CodingStyleEvaluation from "./components/CoadingStyleEvalution/CodingStyl
 import CardAnimation from "./components/CardAnimation";
 import PinnedSection from "./components/PinnedSection/PinnedSection";
 import ScrollAnimation from "./components/ScrollAnimation/ScrollAnimation";
+import SuccessStories from "./components/SuccessStories";
 
 function App() {
   return (
@@ -30,9 +31,11 @@ function App() {
 
       {/* <TextScrolling /> */}
 
-      {/* <ServicesAccordion /> */}
+      <ServicesAccordion />
 
       {/* <CodingStyleEvaluation /> */}
+
+      <SuccessStories />
 
       <ScrollAnimation />
 
