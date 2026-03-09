@@ -381,7 +381,7 @@ export default function ServicesAccordion() {
       `}</style>
 
       <div
-        style={{ maxWidth: "1600px", margin: "0 auto", padding: "30px 0px" }}
+        style={{ padding: "30px 0px" }}
       >
         <p
           style={{
@@ -423,6 +423,7 @@ export default function ServicesAccordion() {
                   overflow: "hidden",
                   flexShrink: 0,
                   cursor: "pointer",
+                  padding: "0px 40px",
                   background: active ? "#0d0d0d" : "transparent",
                   color: active ? "#fff" : "#111",
                   borderRadius: active ? 0 : 0,
